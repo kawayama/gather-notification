@@ -12,12 +12,13 @@ interface UserActivity {
 export class UserActivityRepository {
   private db: Database | null = null;
 
-  constructor(dbPath: string = '../../data/userActivities.sqlite') {
+  constructor(dbPath: string = 'data/userActivities.sqlite') {
     this.initializeDatabase(dbPath);
   }
 
   private async initializeDatabase(dbPath: string): Promise<void> {
     try {
+      // プロジェクトからの絶対パスで指定する
       this.db = await open({
         filename: dbPath,
         driver: SQLite3Database

@@ -6,6 +6,7 @@ export class PlayerRepository {
   private readonly filePath: string;
 
   constructor() {
+    // 相対パスで指定する必要がある
     this.filePath = path.join(__dirname, '../../data/playerNames.json');
     this.loadData();
   }
