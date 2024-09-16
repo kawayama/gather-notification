@@ -4,7 +4,7 @@ import { PlayerRepository } from '../repositories/PlayerRepository';
 import { SlackService } from './SlackService';
 import { GameEventContext } from "@gathertown/gather-game-client/dist/src/GameEventContexts";
 import { UserActivityRepository } from '../repositories/UserActivityRepository';
-import { ReportService } from './reportService';
+import { ReportService } from './ReportService';
 
 global.WebSocket = require("isomorphic-ws");
 

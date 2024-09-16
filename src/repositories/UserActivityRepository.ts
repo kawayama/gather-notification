@@ -12,7 +12,7 @@ interface UserActivity {
 export class UserActivityRepository {
   private db: Database | null = null;
 
-  constructor(dbPath: string = 'data/userActivities.sqlite') {
+  constructor(dbPath: string = '../../data/userActivities.sqlite') {
     this.initializeDatabase(dbPath);
   }
 

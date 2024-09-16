@@ -6,7 +6,7 @@ export class PlayerRepository {
   private readonly filePath: string;
 
   constructor() {
-    this.filePath = path.join(__dirname, '../data/playerNames.json');
+    this.filePath = path.join(__dirname, '../../data/playerNames.json');
     this.loadData();
   }
 
