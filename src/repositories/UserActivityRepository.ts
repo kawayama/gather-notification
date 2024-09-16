@@ -82,6 +82,11 @@ export class UserActivityRepository {
       const activityTime = new Date(activity.timestamp);
 
       if (activity.action === 'join') {
+        // 既存のjoinアクティビティがある場合、それを終了させる
+        if (lastJoinActivity[activity.playerId]) {
+          const duration = differenceInMinutes(activityTime, new Date(lastJoinActivity[activity.playerId].timestamp));
+          userTimes[activity.playerId] = (userTimes[activity.playerId] || 0) + duration;
+        }
         lastJoinActivity[activity.playerId] = activity;
       } else if (activity.action === 'exit') {
         const joinActivity = lastJoinActivity[activity.playerId];
