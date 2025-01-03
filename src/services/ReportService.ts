@@ -22,12 +22,20 @@ export class ReportService {
 
   private async sendDailyReport(): Promise<void> {
     const userTimes = await this.userActivityRepository.calculateDailyUserTime();
+    if (Object.keys(userTimes).length === 0) {
+      console.log('No user activity found today');
+      return;
+    }
     const message = this.formatRankingMessage('本日の入室時間ランキング', userTimes);
     await SlackService.sendNotification(message);
   }
 
   private async sendWeeklyReport(): Promise<void> {
     const weeklyRanking = await this.userActivityRepository.calculateWeeklyUserTime();
+    if (Object.keys(weeklyRanking).length === 0) {
+      console.log('No user activity found this week');
+      return;
+    }
     const message = this.formatRankingMessage('今週の入室時間ランキング', weeklyRanking);
     await SlackService.sendNotification(message);
   }
