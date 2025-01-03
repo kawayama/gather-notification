@@ -21,7 +21,7 @@
 - `.env` ファイルが必要
     - `GATHER_API_KEY`: https://app.gather.town/apikeys から取得できる
     - `GATHER_SPACE_ID`: スペースのURL https://app.gather.town/app/XXX/YYY -> `XXXX\YYY` (スラッシュではなくバックスラッシュに変える)
-    - `SLACK_WEBHOOK_URL`: https://ipsr-ylab.slack.com/apps/A0F7XDUAZ--incoming-webhook-?tab=more_info から設定
+    - `SLACK_WEBHOOK_URL`: SlackのIncoming Webhooksを設定し、URLを取得する
 
 ```ini
 GATHER_API_KEY="XXX"
