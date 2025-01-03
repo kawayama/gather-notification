@@ -1,25 +1,33 @@
 import { Game } from "@gathertown/gather-game-client";
 import { GATHER_API_KEY, GATHER_SPACE_ID } from '../config';
-import { PlayerRepository } from '../PlayerRepository';
+import { PlayerRepository } from '../repositories/PlayerRepository';
 import { SlackService } from './SlackService';
 import { GameEventContext } from "@gathertown/gather-game-client/dist/src/GameEventContexts";
+import { UserActivityRepository } from '../repositories/UserActivityRepository';
+import { ReportService } from './ReportService';
 
 global.WebSocket = require("isomorphic-ws");
 
 export class GatherService {
   private game: Game;
   private playerRepository: PlayerRepository;
+  private userActivityRepository: UserActivityRepository;
   private isProcessingJoin: boolean = false;
   private isProcessingExit: boolean = false;
+  private dailyReportService: ReportService;
 
   constructor() {
     this.game = new Game(GATHER_SPACE_ID, () => Promise.resolve({ apiKey: GATHER_API_KEY }));
     this.playerRepository = new PlayerRepository();
+    this.userActivityRepository = new UserActivityRepository();
+    this.dailyReportService = new ReportService(this.userActivityRepository, this.playerRepository);
   }
 
   connect(): void {
     this.game.connect();
     this.subscribeToEvents();
+    this.dailyReportService.scheduleDailyReport();
+    this.dailyReportService.scheduleWeeklyReport(); // 週次レポートのスケジュールを追加
   }
 
   private subscribeToEvents(): void {
@@ -47,6 +55,7 @@ export class GatherService {
       }
 
       const playerName = this.playerRepository.getPlayerName(playerId) || "不明なプレイヤー";
+      this.userActivityRepository.addActivity(playerId, playerName, 'join');
       await SlackService.sendNotification(`「${playerName}」が入室しました。\nルームにいるプレイヤー: ${this.getPlayerNames()}`);
       console.log(`プレイヤーの入室通知を送信しました: ${playerName}`);
     } finally {
@@ -72,6 +81,7 @@ export class GatherService {
       }
 
       const playerName = this.playerRepository.getPlayerName(playerId) || "不明なプレイヤー";
+      this.userActivityRepository.addActivity(playerId, playerName, 'exit');
       await SlackService.sendNotification(`「${playerName}」が退出しました。\nルームにいるプレイヤー: ${this.getPlayerNames()}`);
       console.log(`${playerName}の退出通知を送信しました`);
     } finally {
